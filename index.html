@@ -342,7 +342,7 @@ coordinates["70"], // Chechen
                     labels.forEach(function (label, index) {
                         var coord = coords[index];
                         if (coord && label.value) {
-                            var labelColor = '#808080';
+                            var labelColor = 'black';
 if (uralicLanguages.includes(label.name)) {
     labelColor = 'blue';
 } else if (romanceLanguages.includes(label.name)) {
@@ -356,7 +356,7 @@ if (uralicLanguages.includes(label.name)) {
 } else if (celticLanguages.includes(label.name)) {
     labelColor = '#8B4513';
 } else if (germanicLanguages.includes(label.name)) {
-    labelColor = 'black';
+    labelColor = '#808080';
 }
 
                             var marker = L.marker([coord.lat, coord.lng], {
