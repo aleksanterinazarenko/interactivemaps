@@ -3,6 +3,7 @@
 <head>
     <title>Interactive Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
     <style>
         html, body {
             height: 100%;
@@ -17,8 +18,8 @@
             left: 0;
         }
         #wordSelector {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            font-size: 16px;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 14px;
             padding: 10px;
             margin: 10px;
             position: absolute;
@@ -33,8 +34,8 @@
     justify-content: center; 
     padding: 0;
     text-align: center;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 16px;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
     color: black;
     width: fit-content;
     height: fit-content;
@@ -116,7 +117,7 @@
 "53": { lat: 54.84503, lng: 46.23863}, // Erzya
 "54": { lat: 54.3211519, lng: 43.3363522}, // Moksha
 "55": { lat: 56.3324346, lng: 46.5462855}, // Mari, Hill
-"56": { lat: 57.1101118, lng: 50.0003067}, // Mari, Meadow
+"56": { lat: 56.6326996, lng: 47.8975847}, // Mari, Meadow
 "57": { lat: 61.6685237, lng: 50.8352024}, // Komi, Zyrian
 "58": { lat: 59.014606, lng: 54.664135}, // Komi, Permyak
 "59": { lat: 56.866557, lng: 53.2094166}, // Udmurt
@@ -155,90 +156,116 @@
         }
 
         function updateLabels(wordKey) {
-            fetch('words.json')
-                .then(response => response.json())
-                .then(data => {
-                    map.eachLayer(function (layer) {
-                        if (layer instanceof L.Marker) {
-                            map.removeLayer(layer);
-                        }
-                    });
+    fetch('words.json')
+        .then(response => response.json())
+        .then(data => {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
 
-                    var bounds = L.latLngBounds([]);
+            var bounds = L.latLngBounds([]);
 
-                    const selectedRow = data.find(row => row["1"] === wordKey);
-                    if (selectedRow) {
-                        const labels = [
-                        { name: "English", value: selectedRow["2"] },
-{ name: "German", value: selectedRow["3"] },
-{ name: "Dutch", value: selectedRow["4"] },
-{ name: "Swedish", value: selectedRow["5"] },
-{ name: "Danish", value: selectedRow["6"] },
-{ name: "Norwegian", value: selectedRow["7"] },
-{ name: "Icelandic", value: selectedRow["8"] },
-{ name: "Irish", value: selectedRow["9"] },
-{ name: "Welsh", value: selectedRow["10"] },
-{ name: "Breton", value: selectedRow["11"] },
-{ name: "Latin", value: selectedRow["12"] },
-{ name: "Spanish", value: selectedRow["13"] },
-{ name: "Portuguese", value: selectedRow["14"] },
-{ name: "Catalan", value: selectedRow["15"] },
-{ name: "French", value: selectedRow["16"] },
-{ name: "Italian", value: selectedRow["17"] },
-{ name: "Romanian", value: selectedRow["18"] },
-{ name: "Lithuanian", value: selectedRow["19"] },
-{ name: "Latvian", value: selectedRow["20"] },
-{ name: "Russian", value: selectedRow["21"] },
-{ name: "Ukrainian", value: selectedRow["22"] },
-{ name: "Belarusian", value: selectedRow["23"] },
-{ name: "Polish", value: selectedRow["24"] },
-{ name: "Czech", value: selectedRow["25"] },
-{ name: "Slovak", value: selectedRow["26"] },
-{ name: "Croatian", value: selectedRow["27"] },
-{ name: "Slovenian", value: selectedRow["28"] },
-{ name: "Bulgarian", value: selectedRow["29"] },
-{ name: "Mongolian", value: selectedRow["30"] },
-{ name: "Buriat", value: selectedRow["31"] },
-{ name: "Kalmyk", value: selectedRow["32"] },
-{ name: "Turkish", value: selectedRow["33"] },
-{ name: "Azerbaijani", value: selectedRow["34"] },
-{ name: "Kazakh", value: selectedRow["35"] },
-{ name: "Bashkir", value: selectedRow["36"] },
-{ name: "Tatar", value: selectedRow["37"] },
-{ name: "Uzbek, South", value: selectedRow["38"] },
-{ name: "Sakha", value: selectedRow["39"] },
-{ name: "Chuvash", value: selectedRow["40"] },
-{ name: "Finnish", value: selectedRow["41"] },
-{ name: "Estonian", value: selectedRow["42"] },
-{ name: "Livonian", value: selectedRow["43"] },
-{ name: "Veps", value: selectedRow["44"] },
-{ name: "Karelian, Olonets", value: selectedRow["45"] },
-{ name: "Karelian, North", value: selectedRow["46"] },
-{ name: "Saami, Southern", value: selectedRow["47"] },
-{ name: "Saami, Lule", value: selectedRow["48"] },
-{ name: "Saami, Northern", value: selectedRow["49"] },
-{ name: "Saami, Inari", value: selectedRow["50"] },
-{ name: "Saami, Skolt", value: selectedRow["51"] },
-{ name: "Saami, Kildin", value: selectedRow["52"] },
-{ name: "Erzya", value: selectedRow["53"] },
-{ name: "Moksha", value: selectedRow["54"] },
-{ name: "Mari, Hill", value: selectedRow["55"] },
-{ name: "Mari, Meadow", value: selectedRow["56"] },
-{ name: "Komi, Zyrian", value: selectedRow["57"] },
-{ name: "Komi, Permyak", value: selectedRow["58"] },
-{ name: "Udmurt", value: selectedRow["59"] },
-{ name: "Hungarian", value: selectedRow["60"] },
-{ name: "Kazym Khanty", value: selectedRow["61"] },
-{ name: "Sosva Mansi", value: selectedRow["62"] },
-{ name: "Selkup, Northern", value: selectedRow["63"] },
-{ name: "Nenets, Tundra", value: selectedRow["64"] },
-{ name: "Enets, Forest", value: selectedRow["65"] },
-{ name: "Nganasan", value: selectedRow["66"] },
-{ name: "Georgian", value: selectedRow["67"] },
-{ name: "Abkhaz", value: selectedRow["68"] },
-{ name: "Adyghe", value: selectedRow["69"] },
-{ name: "Chechen", value: selectedRow["70"] },
-                        ];
+            const selectedRow = data.find(row => row["1"] === wordKey);
+            if (selectedRow) {
+                const labels = [
+                    { name: "English", value: selectedRow["2"] },
+                    { name: "German", value: selectedRow["3"] },
+                    { name: "Dutch", value: selectedRow["4"] },
+                    { name: "Swedish", value: selectedRow["5"] },
+                    { name: "Danish", value: selectedRow["6"] },
+                    { name: "Norwegian", value: selectedRow["7"] },
+                    { name: "Icelandic", value: selectedRow["8"] },
+                    { name: "Irish", value: selectedRow["9"] },
+                    { name: "Welsh", value: selectedRow["10"] },
+                    { name: "Breton", value: selectedRow["11"] },
+                    { name: "Latin", value: selectedRow["12"] },
+                    { name: "Spanish", value: selectedRow["13"] },
+                    { name: "Portuguese", value: selectedRow["14"] },
+                    { name: "Catalan", value: selectedRow["15"] },
+                    { name: "French", value: selectedRow["16"] },
+                    { name: "Italian", value: selectedRow["17"] },
+                    { name: "Romanian", value: selectedRow["18"] },
+                    { name: "Lithuanian", value: selectedRow["19"] },
+                    { name: "Latvian", value: selectedRow["20"] },
+                    { name: "Russian", value: selectedRow["21"] },
+                    { name: "Ukrainian", value: selectedRow["22"] },
+                    { name: "Belarusian", value: selectedRow["23"] },
+                    { name: "Polish", value: selectedRow["24"] },
+                    { name: "Czech", value: selectedRow["25"] },
+                    { name: "Slovak", value: selectedRow["26"] },
+                    { name: "Croatian", value: selectedRow["27"] },
+                    { name: "Slovenian", value: selectedRow["28"] },
+                    { name: "Bulgarian", value: selectedRow["29"] },
+                    { name: "Mongolian", value: selectedRow["30"] },
+                    { name: "Buriat", value: selectedRow["31"] },
+                    { name: "Kalmyk", value: selectedRow["32"] },
+                    { name: "Turkish", value: selectedRow["33"] },
+                    { name: "Azerbaijani", value: selectedRow["34"] },
+                    { name: "Kazakh", value: selectedRow["35"] },
+                    { name: "Bashkir", value: selectedRow["36"] },
+                    { name: "Tatar", value: selectedRow["37"] },
+                    { name: "Uzbek, South", value: selectedRow["38"] },
+                    { name: "Sakha", value: selectedRow["39"] },
+                    { name: "Chuvash", value: selectedRow["40"] },
+                    { name: "Finnish", value: selectedRow["41"] },
+                    { name: "Estonian", value: selectedRow["42"] },
+                    { name: "Livonian", value: selectedRow["43"] },
+                    { name: "Veps", value: selectedRow["44"] },
+                    { name: "Karelian, Olonets", value: selectedRow["45"] },
+                    { name: "Karelian, North", value: selectedRow["46"] },
+                    { name: "Saami, Southern", value: selectedRow["47"] },
+                    { name: "Saami, Lule", value: selectedRow["48"] },
+                    { name: "Saami, Northern", value: selectedRow["49"] },
+                    { name: "Saami, Inari", value: selectedRow["50"] },
+                    { name: "Saami, Skolt", value: selectedRow["51"] },
+                    { name: "Saami, Kildin", value: selectedRow["52"] },
+                    { name: "Erzya", value: selectedRow["53"] },
+                    { name: "Moksha", value: selectedRow["54"] },
+                    { name: "Mari, Hill", value: selectedRow["55"] },
+                    { name: "Mari, Meadow", value: selectedRow["56"] },
+                    { name: "Komi, Zyrian", value: selectedRow["57"] },
+                    { name: "Komi, Permyak", value: selectedRow["58"] },
+                    { name: "Udmurt", value: selectedRow["59"] },
+                    { name: "Hungarian", value: selectedRow["60"] },
+                    { name: "Kazym Khanty", value: selectedRow["61"] },
+                    { name: "Sosva Mansi", value: selectedRow["62"] },
+                    { name: "Selkup, Northern", value: selectedRow["63"] },
+                    { name: "Nenets, Tundra", value: selectedRow["64"] },
+                    { name: "Enets, Forest", value: selectedRow["65"] },
+                    { name: "Nganasan", value: selectedRow["66"] },
+                    { name: "Georgian", value: selectedRow["67"] },
+                    { name: "Abkhaz", value: selectedRow["68"] },
+                    { name: "Adyghe", value: selectedRow["69"] },
+                    { name: "Chechen", value: selectedRow["70"] },
+                ];
+
+                const uralicLanguages = [
+                    "Finnish", "Estonian", "Livonian", "Veps", "Karelian, Olonets", "Karelian, North",
+                    "Saami, Southern", "Saami, Lule", "Saami, Northern", "Saami, Inari", "Saami, Skolt", "Saami, Kildin",
+                    "Erzya", "Moksha", "Mari, Hill", "Mari, Meadow", "Komi, Zyrian", "Komi, Permyak", "Udmurt",
+                    "Hungarian", "Kazym Khanty", "Sosva Mansi", "Selkup, Northern", "Nenets, Tundra", "Enets, Forest", "Nganasan"
+                ];
+                const romanceLanguages = [
+                    "Latin", "Spanish", "Portuguese", "Catalan", "French", "Italian", "Romanian"
+                ];
+                const slavicLanguages = [
+    "Polish", "Czech", "Slovak", "Croatian", "Slovenian", "Bulgarian", "Russian", "Ukrainian", "Belarusian"
+];
+const balticLanguages = [
+    "Lithuanian", "Latvian"
+];
+const turkicLanguages = [
+    "Turkish", "Azerbaijani", "Kazakh", "Bashkir", "Tatar", "Uzbek, South", "Sakha", "Chuvash"
+];
+const celticLanguages = [
+    "Irish", "Welsh", "Breton"
+];
+const germanicLanguages = [
+    "English", "German", "Dutch", "Swedish", "Danish", "Norwegian", "Icelandic"
+];
+
                         const coords = [
                         coordinates["2"], // English
 coordinates["3"], // German
@@ -312,30 +339,47 @@ coordinates["70"], // Chechen
                         ];
 
                         if (labels && coords) {
-                            labels.forEach(function (label, index) {
-                                var coord = coords[index];
-                                if (coord && label.value) {
-                                    var marker = L.marker([coord.lat, coord.lng], {
-                                        icon: L.divIcon({
-                                            className: 'custom-label',
-                                            html: label.value,
-                                            iconSize: [100, 50]
-                                        }),
-                                        popupAnchor: [0, -20]
-                                    }).addTo(map);
+                    labels.forEach(function (label, index) {
+                        var coord = coords[index];
+                        if (coord && label.value) {
+                            var labelColor = 'black';
+if (uralicLanguages.includes(label.name)) {
+    labelColor = 'blue';
+} else if (romanceLanguages.includes(label.name)) {
+    labelColor = 'red';
+} else if (slavicLanguages.includes(label.name)) {
+    labelColor = 'green';
+} else if (balticLanguages.includes(label.name)) {
+    labelColor = '#007A7A';
+} else if (turkicLanguages.includes(label.name)) {
+    labelColor = '#800080';
+} else if (celticLanguages.includes(label.name)) {
+    labelColor = '#8B4513';
+} else if (germanicLanguages.includes(label.name)) {
+    labelColor = '#404040';
+}
 
-                                    marker.bindPopup(`<strong>${label.name}</strong>`);
+                            var marker = L.marker([coord.lat, coord.lng], {
+                                icon: L.divIcon({
+                                    className: 'custom-label',
+                                    html: `<span style="color: ${labelColor};">${label.value}</span>`,
+                                    iconSize: [100, 50]
+                                }),
+                                popupAnchor: [0, -20]
+                            }).addTo(map);
 
-                                    bounds.extend(marker.getLatLng());
-                                }
-                            });
+                            marker.bindPopup(`<strong>${label.name}</strong>`);
 
-                            map.fitBounds(bounds, { padding: [50, 50] });
+                            bounds.extend(marker.getLatLng());
                         }
-                    }
-                })
-                .catch(error => console.error('Error loading JSON:', error));
-        }
+                    });
+
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            }
+        })
+        .catch(error => console.error('Error loading JSON:', error));
+}
 
         document.getElementById('wordSelector').addEventListener('change', function (e) {
             var selectedWord = e.target.value;
