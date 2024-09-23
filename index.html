@@ -17,17 +17,29 @@
             top: 0;
             left: 0;
         }
-        #wordSelector {
-            font-family: 'Noto Sans', sans-serif;
-            font-size: 14px;
-            padding: 10px;
-            margin: 10px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            z-index: 1000;
-        }
+        .selectors-container {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#wordSelector {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px;
+    margin-right: 10px;
+    background: white;
+}
+
+#mapSelector {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px;
+    margin: 0 20px;
+    background: white;
+}
         .custom-label {
     display: flex;
     align-items: center;
@@ -49,8 +61,14 @@
     </style>
 </head>
 <body>
-    <select id="wordSelector">
-    </select>
+    <body>
+        <div class="selectors-container">
+            <select id="mapSelector" class="select">
+                <option value="https://aleksanterinazarenko.github.io/interactivemap-europe/">Europe</option>
+                <option value="https://aleksanterinazarenko.github.io/interactivemap-uralic/">Uralic</option>
+            </select>
+            <select id="wordSelector"></select>
+        </div>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
@@ -391,6 +409,11 @@ if (uralicLanguages.includes(label.name)) {
         window.addEventListener('resize', function() {
             map.invalidateSize();
         });
+
+        document.getElementById('mapSelector').addEventListener('change', function() {
+    const selectedValue = this.value;
+    window.location.href = selectedValue;
+});
     </script>
 </body>
 </html>
