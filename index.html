@@ -3,7 +3,7 @@
 <head>
     <title>Interactive Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <style>
         html, body {
             height: 100%;
@@ -26,7 +26,7 @@
 }
 
 #wordSelector {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     padding: 10px;
     margin-right: 10px;
@@ -34,7 +34,7 @@
 }
 
 #mapSelector {
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     padding: 10px;
     margin: 0 20px;
@@ -46,7 +46,7 @@
     justify-content: center; 
     padding: 0;
     text-align: center;
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 14px;
     color: black;
     width: fit-content;
@@ -55,9 +55,59 @@
     white-space: nowrap;
 }
         .leaflet-popup-content {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: "Inter", sans-serif;
             text-align: center;
         }
+
+        .legend-container {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.legend {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend-toggle {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid #333;
+  padding: 10px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.color-box {
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+.legend-item span {
+  font-size: 14px;
+  color: #333;
+}
     </style>
 </head>
 <body>
@@ -70,7 +120,46 @@
             </select>
             <select id="wordSelector"></select>
         </div>
+
+        <div class="legend-container">
+            <button class="legend-toggle">Legenda</button>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #333333;"></div>
+                <span>Germanic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: red;"></div>
+                <span>Romance</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: green;"></div>
+                <span>Slavic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #007A7A;"></div>
+                <span>Baltic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: blue;"></div>
+                <span>Uralic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #800080;"></div>
+                <span>Turkic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #8B4513;"></div>
+                <span>Celtic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #808080;"></div>
+                <span>Other</span>
+              </div>
+            </div>
+          </div>
     <div id="map"></div>
+    
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         var map = L.map('map');
@@ -405,8 +494,6 @@ if (uralicLanguages.includes(label.name)) {
             updateLabels(selectedWord);
         });
 
-        populateDropdown();
-
         window.addEventListener('resize', function() {
             map.invalidateSize();
         });
@@ -415,6 +502,17 @@ if (uralicLanguages.includes(label.name)) {
     const selectedValue = this.value;
     window.location.href = selectedValue;
 });
+
+document.querySelector('.legend-toggle').addEventListener('click', function () {
+            const legend = document.querySelector('.legend');
+            if (legend.style.display === 'none' || legend.style.display === '') {
+                legend.style.display = 'block';
+            } else {
+                legend.style.display = 'none';
+            }
+        });
+
+        populateDropdown();
     </script>
 </body>
 </html>
