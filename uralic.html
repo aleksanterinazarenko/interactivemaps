@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .selectors-container {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#wordSelector {
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    padding: 10px;
+    margin-right: 10px;
+    background: white;
+}
+
+#mapSelector {
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    padding: 10px;
+    margin: 0 20px;
+    background: white;
+}
+        .custom-label {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    padding: 0;
+    text-align: center;
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    color: black;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+        .leaflet-popup-content {
+            font-family: 'Liberation Serif', sans-serif;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="selectors-container">
+        <select id="mapSelector" class="select">
+            <option value="uralic.html">Uralic</option>
+            <option value="europe.html">Europe</option>
+            <option value="mordvinic-wiktionary.html">Mordvinic</option>
+        </select>
+        <select id="wordSelector"></select>
+    </div>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map');
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+}).addTo(map);
+
+        const coordinates = {
+            "B": { lat: 62.2417066, lng: 25.7495727 }, // Finnish
+            "C": { lat: 62.6194031, lng: 33.4920267 }, // Karelian
+            "D": { lat: 60.63333, lng: 34.83333 }, // Veps
+            "E": { lat: 58.8101662, lng: 25.4252349 },  // Estonian
+            "F": { lat: 57.2451926, lng: 22.5903003 }, // Livonian
+            "G": { lat: 69.4718736, lng: 25.5111384 }, // Northern Sami
+            "H": { lat: 68.9707, lng: 33.0811 }, // Kildin Sami
+            "I": { lat: 54.84503, lng: 46.23863 }, // Erzya
+            "J": { lat: 54.3229, lng: 43.33957 }, // Moksha
+            "K": { lat: 56.6326996, lng: 47.8975847 }, // Eastern Mari
+            "L": { lat: 58.1401196, lng: 52.6464388 }, // Udmurt
+            "M": { lat: 61.6685237, lng: 50.8352024 }, // Komi-Zyrian
+            "N": { lat: 47.4979, lng: 19.0402 }, // Hungarian
+            "O": { lat: 63.935246, lng: 65.053566 }, // Northern Mansi
+        };
+
+        function populateDropdown() {
+            fetch('uralic.json')
+                .then(response => response.json())
+                .then(data => {
+                    const wordSelector = document.getElementById('wordSelector');
+                    data.forEach((row, index) => {
+                        if (index > 0) {
+                            let option = document.createElement('option');
+                            option.value = row["A"];
+                            option.textContent = row["A"];
+                            wordSelector.appendChild(option);
+                        }
+                    });
+
+                    const firstWord = data[1]["A"];
+                    wordSelector.value = firstWord;
+                    updateLabels(firstWord);
+                })
+                .catch(error => console.error('Error loading JSON:', error));
+        }
+
+        function updateLabels(wordKey) {
+            fetch('uralic.json')
+                .then(response => response.json())
+                .then(data => {
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+
+                    var bounds = L.latLngBounds([]);
+
+                    const selectedRow = data.find(row => row["A"] === wordKey);
+                    if (selectedRow) {
+                        const labels = [
+                            { name: "Finnish", value: selectedRow["B"] },
+                            { name: "Karelian", value: selectedRow["C"] },
+                            { name: "Veps", value: selectedRow["D"] },
+                            { name: "Estonian", value: selectedRow["E"] },
+                            { name: "Livonian", value: selectedRow["F"] },
+                            { name: "Northern Sami", value: selectedRow["G"] },
+                            { name: "Kildin Sami", value: selectedRow["H"] },
+                            { name: "Erzya", value: selectedRow["I"] },
+                            { name: "Moksha", value: selectedRow["J"] },
+                            { name: "Eastern Mari", value: selectedRow["K"] },
+                            { name: "Udmurt", value: selectedRow["L"] },
+                            { name: "Komi-Zyrian", value: selectedRow["M"] },
+                            { name: "Hungarian", value: selectedRow["N"] },
+                            { name: "Northern Mansi", value: selectedRow["O"] },
+                        ];
+                        const coords = [
+                            coordinates["B"], // Finnish
+                            coordinates["C"], // Karelian
+                            coordinates["D"], // Veps
+                            coordinates["E"], // Estonian
+                            coordinates["F"], // Livonian
+                            coordinates["G"], // Northern Sami
+                            coordinates["H"], // Kildin Sami
+                            coordinates["I"], // Erzya
+                            coordinates["J"], // Moksha
+                            coordinates["K"], // Eastern Mari
+                            coordinates["L"], // Udmurt
+                            coordinates["M"], // Komi-Zyrian
+                            coordinates["N"], // Hungarian
+                            coordinates["O"], // Northern Mansi
+                        ];
+
+                        if (labels && coords) {
+                            labels.forEach(function (label, index) {
+                                var coord = coords[index];
+                                if (coord) {
+                                    var marker = L.marker([coord.lat, coord.lng], {
+                                        icon: L.divIcon({
+                                            className: 'custom-label',
+                                            html: label.value,
+                                            iconSize: [100, 50]
+                                        }),
+                                        popupAnchor: [0, -20]
+                                    }).addTo(map);
+
+                                    marker.bindPopup(`<strong>${label.name}</strong>`);
+
+                                    bounds.extend(marker.getLatLng());
+                                }
+                            });
+
+                            map.fitBounds(bounds, { padding: [50, 50] });
+                        }
+                    }
+                })
+                .catch(error => console.error('Error loading JSON:', error));
+        }
+
+        document.getElementById('wordSelector').addEventListener('change', function (e) {
+            var selectedWord = e.target.value;
+            updateLabels(selectedWord);
+        });
+
+        populateDropdown();
+
+        window.addEventListener('resize', function() {
+            map.invalidateSize();
+        });
+
+        document.getElementById('mapSelector').addEventListener('change', function() {
+    const selectedValue = this.value;
+    window.location.href = selectedValue;
+});
+    </script>
+</body>
+</html>

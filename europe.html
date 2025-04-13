@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .selectors-container {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#wordSelector {
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    padding: 10px;
+    margin-right: 10px;
+    background: white;
+}
+
+#mapSelector {
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    padding: 10px;
+    margin: 0 20px;
+    background: white;
+}
+        .custom-label {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    padding: 0;
+    text-align: center;
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    color: black;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+        .leaflet-popup-content {
+            font-family: 'Liberation Serif', sans-serif;
+            text-align: center;
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .legend-container {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.legend {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-family: 'Liberation Serif', sans-serif;
+    font-size: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend-toggle {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid #333;
+  padding: 10px;
+  cursor: pointer;
+  font-family: 'Liberation Serif', sans-serif;
+  font-size: 15px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.color-box {
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+.legend-item span {
+  font-size: 15px;
+  color: #333;
+}
+    </style>
+</head>
+<body>
+        <div class="selectors-container">
+            <select id="mapSelector" class="select">
+                <option value="europe.html">Europe</option>
+                <option value="mordvinic-wiktionary.html">Mordvinic</option>
+                <option value="uralic.html">Uralic</option>
+            </select>
+            <select id="wordSelector"></select>
+        </div>
+
+        <div class="legend-container">
+            <button class="legend-toggle">Legend</button>
+            <div class="legend">
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #333333;"></div>
+                <span>Germanic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: red;"></div>
+                <span>Romance</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: green;"></div>
+                <span>Slavic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #007A7A;"></div>
+                <span>Baltic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: blue;"></div>
+                <span>Uralic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #800080;"></div>
+                <span>Turkic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #8B4513;"></div>
+                <span>Celtic</span>
+              </div>
+              <div class="legend-item">
+                <div class="color-box" style="background-color: #808080;"></div>
+                <span>Other</span>
+              </div>
+            </div>
+          </div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map');
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+}).addTo(map);
+
+        const coordinates = {
+            "2": { lat: 54.7023545, lng: -3.2765753 }, // English
+"3": { lat: 51.1638175, lng: 10.4478313}, // German
+"4": { lat: 52.2434979, lng: 5.6343227}, // Dutch
+"5": { lat: 59.6749712, lng: 14.5208584}, // Swedish
+"6": { lat: 55.670249, lng: 10.3333283}, // Danish
+"7": { lat: 61.1529386, lng: 8.7876653}, // Norwegian
+"8": { lat: 64.9841821, lng: -18.1059013}, // Icelandic
+"9": { lat: 52.865196, lng: -7.9794599}, // Irish
+"10": { lat: 52.2928116, lng: -3.73893}, // Welsh
+"11": { lat: 48.2640845, lng: -2.9202408}, // Breton
+"12": { lat: 41.8933203, lng: 12.4829321}, // Latin
+"13": { lat: 39.3260685, lng: -4.8379791}, // Spanish
+"14": { lat: 39.6621648, lng: -8.1353519}, // Portuguese
+"15": { lat: 41.8523094, lng: 1.5745043}, // Catalan
+"16": { lat: 46.603354, lng: 1.8883335}, // French
+"17": { lat: 42.6384261, lng: 12.674297}, // Italian
+"18": { lat: 45.9852129, lng: 24.6859225}, // Romanian
+"19": { lat: 55.3500003, lng: 23.7499997}, // Lithuanian
+"20": { lat: 56.8406494, lng: 24.7537645}, // Latvian
+"21": { lat: 55.625578, lng: 37.6063916}, // Russian
+"22": { lat: 49.4871968, lng: 31.2718321}, // Ukrainian
+"23": { lat: 53.4250605, lng: 27.6971358}, // Belarusian
+"24": { lat: 52.215933, lng: 19.134422}, // Polish
+"25": { lat: 49.7439047, lng: 15.3381061}, // Czech
+"26": { lat: 48.7411522, lng: 19.4528646}, // Slovak
+"27": { lat: 45.3658443, lng: 15.6575209}, // Croatian
+"28": { lat: 46.1199444, lng: 14.8153333}, // Slovenian
+"29": { lat: 42.6073975, lng: 25.4856617}, // Bulgarian
+"30": { lat: 46.8250388, lng: 103.8499736}, // Mongolian
+"31": { lat: 52.7182426, lng: 109.492143}, // Buriat
+"32": { lat: 46.9017116, lng: 45.249161}, // Kalmyk
+"33": { lat: 38.9597594, lng: 34.9249653}, // Turkish
+"34": { lat: 40.3936294, lng: 47.7872508}, // Azerbaijani
+"35": { lat: 48.1012954, lng: 66.7780818}, // Kazakh
+"36": { lat: 54.4747553, lng: 55.9784582}, // Bashkir
+"37": { lat: 55.7823547, lng: 49.1242266}, // Tatar
+"38": { lat: 41.32373, lng: 63.9528098}, // Uzbek, South
+"39": { lat: 66.941626, lng: 129.642371}, // Sakha
+"40": { lat: 55.4259922, lng: 47.0849429}, // Chuvash
+"41": { lat: 63.2467777, lng: 25.9209164}, // Finnish
+"42": { lat: 58.7523778, lng: 25.3319078}, // Estonian
+"43": { lat: 57.38144, lng: 22.6528733}, // Livonian
+"44": { lat: 59.6279023, lng: 34.5701913}, // Veps
+"45": { lat: 61.1143624, lng: 32.8101903}, // Karelian, Olonets
+"46": { lat: 65.0329483, lng: 31.6156123}, // Karelian, North
+"47": { lat: 65.5962618, lng: 13.990966}, // Saami, Southern
+"48": { lat: 67.9218459, lng: 16.2415845}, // Saami, Lule
+"49": { lat: 69.5311071, lng: 19.5296839}, // Saami, Northern
+"50": { lat: 68.9062456, lng: 27.0260771}, // Saami, Inari
+"51": { lat: 69.508554, lng: 28.593681}, // Saami, Skolt
+"52": { lat: 67.6860159, lng: 37.0921779}, // Saami, Kildin
+"53": { lat: 54.84503, lng: 46.23863}, // Erzya
+"54": { lat: 54.3211519, lng: 43.3363522}, // Moksha
+"55": { lat: 56.3324346, lng: 46.5462855}, // Mari, Hill
+"56": { lat: 56.8114328, lng: 48.9167614}, // Mari, Meadow
+"57": { lat: 61.6685237, lng: 50.8352024}, // Komi, Zyrian
+"58": { lat: 59.014606, lng: 54.664135}, // Komi, Permyak
+"59": { lat: 57.5391501, lng: 53.0808519}, // Udmurt
+"60": { lat: 47.1817585, lng: 19.5060937}, // Hungarian
+"61": { lat: 63.5956031, lng: 68.376244}, // Kazym Khanty
+"62": { lat: 59.5762224, lng: 60.809299}, // Sosva Mansi
+"63": { lat: 65.704239, lng: 82.458855}, // Selkup, Northern
+"64": { lat: 65.532, lng: 72.52}, // Nenets, Tundra
+"65": { lat: 69.406067, lng: 86.175072}, // Enets, Forest
+"66": { lat: 71.1147357, lng: 92.8231614}, // Nganasan
+"67": { lat: 41.6808672, lng: 44.0287806}, // Georgian
+"68": { lat: 43.1500226, lng: 41.2299786}, // Abkhaz
+"69": { lat: 44.6939006, lng: 40.1520421}, // Adyghe
+"70": { lat: 43.4, lng: 45.7}, // Chechen
+        };
+
+        function populateDropdown() {
+            fetch('europe.json')
+                .then(response => response.json())
+                .then(data => {
+                    const wordSelector = document.getElementById('wordSelector');
+                    data.forEach((row, index) => {
+                        if (index > 0) {
+                            let option = document.createElement('option');
+                            option.value = row["1"];
+                            option.textContent = row["1"];
+                            wordSelector.appendChild(option);
+                        }
+                    });
+
+                    const firstWord = data[1]["1"];
+                    wordSelector.value = firstWord;
+                    updateLabels(firstWord);
+                })
+                .catch(error => console.error('Error loading JSON:', error));
+        }
+
+        function updateLabels(wordKey) {
+    fetch('europe.json')
+        .then(response => response.json())
+        .then(data => {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            var bounds = L.latLngBounds([]);
+
+            const selectedRow = data.find(row => row["1"] === wordKey);
+            if (selectedRow) {
+                const labels = [
+                    { name: "English", value: selectedRow["2"] },
+                    { name: "German", value: selectedRow["3"] },
+                    { name: "Dutch", value: selectedRow["4"] },
+                    { name: "Swedish", value: selectedRow["5"] },
+                    { name: "Danish", value: selectedRow["6"] },
+                    { name: "Norwegian", value: selectedRow["7"] },
+                    { name: "Icelandic", value: selectedRow["8"] },
+                    { name: "Irish", value: selectedRow["9"] },
+                    { name: "Welsh", value: selectedRow["10"] },
+                    { name: "Breton", value: selectedRow["11"] },
+                    { name: "Latin", value: selectedRow["12"] },
+                    { name: "Spanish", value: selectedRow["13"] },
+                    { name: "Portuguese", value: selectedRow["14"] },
+                    { name: "Catalan", value: selectedRow["15"] },
+                    { name: "French", value: selectedRow["16"] },
+                    { name: "Italian", value: selectedRow["17"] },
+                    { name: "Romanian", value: selectedRow["18"] },
+                    { name: "Lithuanian", value: selectedRow["19"] },
+                    { name: "Latvian", value: selectedRow["20"] },
+                    { name: "Russian", value: selectedRow["21"] },
+                    { name: "Ukrainian", value: selectedRow["22"] },
+                    { name: "Belarusian", value: selectedRow["23"] },
+                    { name: "Polish", value: selectedRow["24"] },
+                    { name: "Czech", value: selectedRow["25"] },
+                    { name: "Slovak", value: selectedRow["26"] },
+                    { name: "Croatian", value: selectedRow["27"] },
+                    { name: "Slovenian", value: selectedRow["28"] },
+                    { name: "Bulgarian", value: selectedRow["29"] },
+                    { name: "Mongolian", value: selectedRow["30"] },
+                    { name: "Buriat", value: selectedRow["31"] },
+                    { name: "Kalmyk", value: selectedRow["32"] },
+                    { name: "Turkish", value: selectedRow["33"] },
+                    { name: "Azerbaijani", value: selectedRow["34"] },
+                    { name: "Kazakh", value: selectedRow["35"] },
+                    { name: "Bashkir", value: selectedRow["36"] },
+                    { name: "Tatar", value: selectedRow["37"] },
+                    { name: "Uzbek, South", value: selectedRow["38"] },
+                    { name: "Sakha", value: selectedRow["39"] },
+                    { name: "Chuvash", value: selectedRow["40"] },
+                    { name: "Finnish", value: selectedRow["41"] },
+                    { name: "Estonian", value: selectedRow["42"] },
+                    { name: "Livonian", value: selectedRow["43"] },
+                    { name: "Veps", value: selectedRow["44"] },
+                    { name: "Karelian, Olonets", value: selectedRow["45"] },
+                    { name: "Karelian, North", value: selectedRow["46"] },
+                    { name: "Saami, Southern", value: selectedRow["47"] },
+                    { name: "Saami, Lule", value: selectedRow["48"] },
+                    { name: "Saami, Northern", value: selectedRow["49"] },
+                    { name: "Saami, Inari", value: selectedRow["50"] },
+                    { name: "Saami, Skolt", value: selectedRow["51"] },
+                    { name: "Saami, Kildin", value: selectedRow["52"] },
+                    { name: "Erzya", value: selectedRow["53"] },
+                    { name: "Moksha", value: selectedRow["54"] },
+                    { name: "Mari, Hill", value: selectedRow["55"] },
+                    { name: "Mari, Meadow", value: selectedRow["56"] },
+                    { name: "Komi, Zyrian", value: selectedRow["57"] },
+                    { name: "Komi, Permyak", value: selectedRow["58"] },
+                    { name: "Udmurt", value: selectedRow["59"] },
+                    { name: "Hungarian", value: selectedRow["60"] },
+                    { name: "Kazym Khanty", value: selectedRow["61"] },
+                    { name: "Sosva Mansi", value: selectedRow["62"] },
+                    { name: "Selkup, Northern", value: selectedRow["63"] },
+                    { name: "Nenets, Tundra", value: selectedRow["64"] },
+                    { name: "Enets, Forest", value: selectedRow["65"] },
+                    { name: "Nganasan", value: selectedRow["66"] },
+                    { name: "Georgian", value: selectedRow["67"] },
+                    { name: "Abkhaz", value: selectedRow["68"] },
+                    { name: "Adyghe", value: selectedRow["69"] },
+                    { name: "Chechen", value: selectedRow["70"] },
+                ];
+
+                const uralicLanguages = [
+                    "Finnish", "Estonian", "Livonian", "Veps", "Karelian, Olonets", "Karelian, North",
+                    "Saami, Southern", "Saami, Lule", "Saami, Northern", "Saami, Inari", "Saami, Skolt", "Saami, Kildin",
+                    "Erzya", "Moksha", "Mari, Hill", "Mari, Meadow", "Komi, Zyrian", "Komi, Permyak", "Udmurt",
+                    "Hungarian", "Kazym Khanty", "Sosva Mansi", "Selkup, Northern", "Nenets, Tundra", "Enets, Forest", "Nganasan"
+                ];
+                const romanceLanguages = [
+                    "Latin", "Spanish", "Portuguese", "Catalan", "French", "Italian", "Romanian"
+                ];
+                const slavicLanguages = [
+    "Polish", "Czech", "Slovak", "Croatian", "Slovenian", "Bulgarian", "Russian", "Ukrainian", "Belarusian"
+];
+const balticLanguages = [
+    "Lithuanian", "Latvian"
+];
+const turkicLanguages = [
+    "Turkish", "Azerbaijani", "Kazakh", "Bashkir", "Tatar", "Uzbek, South", "Sakha", "Chuvash"
+];
+const celticLanguages = [
+    "Irish", "Welsh", "Breton"
+];
+const germanicLanguages = [
+    "English", "German", "Dutch", "Swedish", "Danish", "Norwegian", "Icelandic"
+];
+
+                        const coords = [
+                        coordinates["2"], // English
+coordinates["3"], // German
+coordinates["4"], // Dutch
+coordinates["5"], // Swedish
+coordinates["6"], // Danish
+coordinates["7"], // Norwegian
+coordinates["8"], // Icelandic
+coordinates["9"], // Irish
+coordinates["10"], // Welsh
+coordinates["11"], // Breton
+coordinates["12"], // Latin
+coordinates["13"], // Spanish
+coordinates["14"], // Portuguese
+coordinates["15"], // Catalan
+coordinates["16"], // French
+coordinates["17"], // Italian
+coordinates["18"], // Romanian
+coordinates["19"], // Lithuanian
+coordinates["20"], // Latvian
+coordinates["21"], // Russian
+coordinates["22"], // Ukrainian
+coordinates["23"], // Belarusian
+coordinates["24"], // Polish
+coordinates["25"], // Czech
+coordinates["26"], // Slovak
+coordinates["27"], // Croatian
+coordinates["28"], // Slovenian
+coordinates["29"], // Bulgarian
+coordinates["30"], // Mongolian
+coordinates["31"], // Buriat
+coordinates["32"], // Kalmyk
+coordinates["33"], // Turkish
+coordinates["34"], // Azerbaijani
+coordinates["35"], // Kazakh
+coordinates["36"], // Bashkir
+coordinates["37"], // Tatar
+coordinates["38"], // Uzbek, South
+coordinates["39"], // Sakha
+coordinates["40"], // Chuvash
+coordinates["41"], // Finnish
+coordinates["42"], // Estonian
+coordinates["43"], // Livonian
+coordinates["44"], // Veps
+coordinates["45"], // Karelian, Olonets
+coordinates["46"], // Karelian, North
+coordinates["47"], // Saami, Southern
+coordinates["48"], // Saami, Lule
+coordinates["49"], // Saami, Northern
+coordinates["50"], // Saami, Inari
+coordinates["51"], // Saami, Skolt
+coordinates["52"], // Saami, Kildin
+coordinates["53"], // Erzya
+coordinates["54"], // Moksha
+coordinates["55"], // Mari, Hill
+coordinates["56"], // Mari, Meadow
+coordinates["57"], // Komi, Zyrian
+coordinates["58"], // Komi, Permyak
+coordinates["59"], // Udmurt
+coordinates["60"], // Hungarian
+coordinates["61"], // Kazym Khanty
+coordinates["62"], // Sosva Mansi
+coordinates["63"], // Selkup, Northern
+coordinates["64"], // Nenets, Tundra
+coordinates["65"], // Enets, Forest
+coordinates["66"], // Nganasan
+coordinates["67"], // Georgian
+coordinates["68"], // Abkhaz
+coordinates["69"], // Adyghe
+coordinates["70"], // Chechen
+                        ];
+
+                        if (labels && coords) {
+                    labels.forEach(function (label, index) {
+                        var coord = coords[index];
+                        if (coord && label.value) {
+                            var labelColor = '#808080';
+if (uralicLanguages.includes(label.name)) {
+    labelColor = 'blue';
+} else if (romanceLanguages.includes(label.name)) {
+    labelColor = 'red';
+} else if (slavicLanguages.includes(label.name)) {
+    labelColor = 'green';
+} else if (balticLanguages.includes(label.name)) {
+    labelColor = '#007A7A';
+} else if (turkicLanguages.includes(label.name)) {
+    labelColor = '#800080';
+} else if (celticLanguages.includes(label.name)) {
+    labelColor = '#8B4513';
+} else if (germanicLanguages.includes(label.name)) {
+    labelColor = '#333333';
+}
+
+                            var marker = L.marker([coord.lat, coord.lng], {
+                                icon: L.divIcon({
+                                    className: 'custom-label',
+                                    html: `<span style="color: ${labelColor};">${label.value}</span>`,
+                                    iconSize: [100, 50]
+                                }),
+                                popupAnchor: [0, -20]
+                            }).addTo(map);
+
+                            marker.bindPopup(`<strong>${label.name}</strong>`);
+
+                            bounds.extend(marker.getLatLng());
+                        }
+                    });
+
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            }
+        })
+        .catch(error => console.error('Error loading JSON:', error));
+}
+
+        document.getElementById('wordSelector').addEventListener('change', function (e) {
+            var selectedWord = e.target.value;
+            updateLabels(selectedWord);
+        });
+
+        window.addEventListener('resize', function() {
+            map.invalidateSize();
+        });
+
+        document.getElementById('mapSelector').addEventListener('change', function() {
+    const selectedValue = this.value;
+    window.location.href = selectedValue;
+});
+
+document.querySelector('.legend-toggle').addEventListener('click', function () {
+            const legend = document.querySelector('.legend');
+            if (legend.style.display === 'none' || legend.style.display === '') {
+                legend.style.display = 'block';
+            } else {
+                legend.style.display = 'none';
+            }
+        });
+
+        populateDropdown();
+    </script>
+</body>
+</html>
