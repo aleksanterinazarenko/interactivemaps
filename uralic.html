@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Interactive Map</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
@@ -21,43 +27,43 @@
         }
 
         .selectors-container {
-    display: flex;
-    position: absolute;
-    top: 20px;
-    right: 10px;
-    z-index: 1000;
-}
+            display: flex;
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            z-index: 1000;
+        }
 
-#wordSelector {
-    font-size: 1rem;
-    padding: 10px;
-    margin-right: 10px;
-    background: white;
-    font-family: 'Finlandica', sans-serif;
-}
+        #wordSelector {
+            font-size: 1rem;
+            padding: 10px;
+            margin-right: 10px;
+            background: white;
+            font-family: 'Finlandica', sans-serif;
+        }
 
-#mapSelector {
-    font-size: 1rem;
-    padding: 10px;
-    margin: 0 20px;
-    background: white;
-    font-family: 'Finlandica', sans-serif;
-}
+        #mapSelector {
+            font-size: 1rem;
+            padding: 10px;
+            margin: 0 20px;
+            background: white;
+            font-family: 'Finlandica', sans-serif;
+        }
 
         .custom-label {
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-    padding: 0;
-    text-align: center;
-    font-size: 1rem;
-    color: black;
-    width: fit-content;
-    height: fit-content;
-    border-radius: 3px;
-    white-space: nowrap;
-    font-family: 'Finlandica', sans-serif;
-}
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            text-align: center;
+            font-size: 1rem;
+            color: black;
+            width: fit-content;
+            height: fit-content;
+            border-radius: 3px;
+            white-space: nowrap;
+            font-family: 'Finlandica', 'Roboto Condensed', sans-serif;
+        }
 
         .leaflet-popup-content {
             text-align: center;
@@ -67,6 +73,7 @@
     </style>
 
 </head>
+
 <body>
     <div class="selectors-container">
         <select id="mapSelector" class="select">
@@ -82,26 +89,68 @@
         var map = L.map('map');
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-}).addTo(map);
+            attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
 
         const coordinates = {
-            "B": { lat: 62.2417066, lng: 25.7495727 }, // Finnish
-            "C": { lat: 62.6194031, lng: 33.4920267 }, // Karelian
-            "D": { lat: 60.63333, lng: 34.83333 }, // Veps
-            "E": { lat: 58.8101662, lng: 25.4252349 },  // Estonian
-            "F": { lat: 57.2451926, lng: 22.5903003 }, // Livonian
-            "G": { lat: 69.4718736, lng: 25.5111384 }, // Northern Sami
-            "H": { lat: 68.9707, lng: 33.0811 }, // Kildin Sami
-            "I": { lat: 54.84503, lng: 46.23863 }, // Erzya
-            "J": { lat: 54.3229, lng: 43.33957 }, // Moksha
-            "K": { lat: 56.6326996, lng: 47.8975847 }, // Eastern Mari
-            "L": { lat: 58.1401196, lng: 52.6464388 }, // Udmurt
-            "M": { lat: 61.6685237, lng: 50.8352024 }, // Komi-Zyrian
-            "N": { lat: 47.4979, lng: 19.0402 }, // Hungarian
-            "O": { lat: 63.935246, lng: 65.053566 }, // Northern Mansi
+            "B": {
+                lat: 62.2417066,
+                lng: 25.7495727
+            }, // Finnish
+            "C": {
+                lat: 62.6194031,
+                lng: 33.4920267
+            }, // Karelian
+            "D": {
+                lat: 60.63333,
+                lng: 34.83333
+            }, // Veps
+            "E": {
+                lat: 58.8101662,
+                lng: 25.4252349
+            }, // Estonian
+            "F": {
+                lat: 57.2451926,
+                lng: 22.5903003
+            }, // Livonian
+            "G": {
+                lat: 69.4718736,
+                lng: 25.5111384
+            }, // Northern Sami
+            "H": {
+                lat: 68.9707,
+                lng: 33.0811
+            }, // Kildin Sami
+            "I": {
+                lat: 54.84503,
+                lng: 46.23863
+            }, // Erzya
+            "J": {
+                lat: 54.3229,
+                lng: 43.33957
+            }, // Moksha
+            "K": {
+                lat: 56.6326996,
+                lng: 47.8975847
+            }, // Eastern Mari
+            "L": {
+                lat: 58.1401196,
+                lng: 52.6464388
+            }, // Udmurt
+            "M": {
+                lat: 61.6685237,
+                lng: 50.8352024
+            }, // Komi-Zyrian
+            "N": {
+                lat: 47.4979,
+                lng: 19.0402
+            }, // Hungarian
+            "O": {
+                lat: 63.935246,
+                lng: 65.053566
+            }, // Northern Mansi
         };
 
         function populateDropdown() {
@@ -139,21 +188,62 @@
 
                     const selectedRow = data.find(row => row["A"] === wordKey);
                     if (selectedRow) {
-                        const labels = [
-                            { name: "Finnish", value: selectedRow["B"] },
-                            { name: "Karelian", value: selectedRow["C"] },
-                            { name: "Veps", value: selectedRow["D"] },
-                            { name: "Estonian", value: selectedRow["E"] },
-                            { name: "Livonian", value: selectedRow["F"] },
-                            { name: "Northern Sami", value: selectedRow["G"] },
-                            { name: "Kildin Sami", value: selectedRow["H"] },
-                            { name: "Erzya", value: selectedRow["I"] },
-                            { name: "Moksha", value: selectedRow["J"] },
-                            { name: "Eastern Mari", value: selectedRow["K"] },
-                            { name: "Udmurt", value: selectedRow["L"] },
-                            { name: "Komi-Zyrian", value: selectedRow["M"] },
-                            { name: "Hungarian", value: selectedRow["N"] },
-                            { name: "Northern Mansi", value: selectedRow["O"] },
+                        const labels = [{
+                                name: "Finnish",
+                                value: selectedRow["B"]
+                            },
+                            {
+                                name: "Karelian",
+                                value: selectedRow["C"]
+                            },
+                            {
+                                name: "Veps",
+                                value: selectedRow["D"]
+                            },
+                            {
+                                name: "Estonian",
+                                value: selectedRow["E"]
+                            },
+                            {
+                                name: "Livonian",
+                                value: selectedRow["F"]
+                            },
+                            {
+                                name: "Northern Sami",
+                                value: selectedRow["G"]
+                            },
+                            {
+                                name: "Kildin Sami",
+                                value: selectedRow["H"]
+                            },
+                            {
+                                name: "Erzya",
+                                value: selectedRow["I"]
+                            },
+                            {
+                                name: "Moksha",
+                                value: selectedRow["J"]
+                            },
+                            {
+                                name: "Eastern Mari",
+                                value: selectedRow["K"]
+                            },
+                            {
+                                name: "Udmurt",
+                                value: selectedRow["L"]
+                            },
+                            {
+                                name: "Komi-Zyrian",
+                                value: selectedRow["M"]
+                            },
+                            {
+                                name: "Hungarian",
+                                value: selectedRow["N"]
+                            },
+                            {
+                                name: "Northern Mansi",
+                                value: selectedRow["O"]
+                            },
                         ];
                         const coords = [
                             coordinates["B"], // Finnish
@@ -191,7 +281,9 @@
                                 }
                             });
 
-                            map.fitBounds(bounds, { padding: [50, 50] });
+                            map.fitBounds(bounds, {
+                                padding: [50, 50]
+                            });
                         }
                     }
                 })
@@ -205,14 +297,15 @@
 
         populateDropdown();
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             map.invalidateSize();
         });
 
-        document.getElementById('mapSelector').addEventListener('change', function() {
-    const selectedValue = this.value;
-    window.location.href = selectedValue;
-});
+        document.getElementById('mapSelector').addEventListener('change', function () {
+            const selectedValue = this.value;
+            window.location.href = selectedValue;
+        });
     </script>
 </body>
+
 </html>

@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Map with Wiktionary Data</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
+
         #map {
             height: 100%;
             width: 100%;
@@ -21,34 +26,35 @@
             top: 0;
             left: 0;
         }
+
         .selectors-container {
-    display: flex;
-    position: absolute;
-    top: 20px;
-    right: 10px;
-    z-index: 1000;
-}
+            display: flex;
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            z-index: 1000;
+        }
 
-#wordSelector {
-    font-size: 1rem;
-    padding: 10px;
-    margin-right: 10px;
-    background: white;
-    font-family: 'Finlandica', sans-serif;
-}
+        #wordSelector {
+            font-size: 1rem;
+            padding: 10px;
+            margin-right: 10px;
+            background: white;
+            font-family: 'Finlandica', sans-serif;
+        }
 
-#mapSelector {
-    font-size: 1rem;
-    padding: 10px;
-    margin: 0 20px;
-    background: white;
-    font-family: 'Finlandica', sans-serif;
-}
+        #mapSelector {
+            font-size: 1rem;
+            padding: 10px;
+            margin: 0 20px;
+            background: white;
+            font-family: 'Finlandica', sans-serif;
+        }
 
         .custom-label {
             display: flex;
             align-items: center;
-            justify-content: center; 
+            justify-content: center;
             padding: 0;
             text-align: center;
             font-size: 1rem;
@@ -57,7 +63,7 @@
             height: fit-content;
             border-radius: 3px;
             white-space: nowrap;
-            font-family: 'Finlandica', sans-serif;
+            font-family: 'Finlandica', 'Roboto Condensed', sans-serif;
         }
 
         .leaflet-popup-content {
@@ -69,6 +75,7 @@
     </style>
 
 </head>
+
 <body>
     <div class="selectors-container">
         <select id="mapSelector" class="select">
@@ -84,20 +91,36 @@
         var map = L.map('map');
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-}).addTo(map);
+            attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
 
         const coordinates = {
-            "Moksha": { lat: 54.079964, lng: 42.837425 },
-            "Erzya": { lat: 54.8419041, lng: 46.5878356 },
-            "Russian": { lat: 55.7558, lng: 37.6173 },
-            "Finnish": { lat: 63.2467777, lng: 25.9209164 },
-            "Hungarian": { lat: 47.1817585, lng: 19.5060937 }
+            "Moksha": {
+                lat: 54.079964,
+                lng: 42.837425
+            },
+            "Erzya": {
+                lat: 54.8419041,
+                lng: 46.5878356
+            },
+            "Russian": {
+                lat: 55.7558,
+                lng: 37.6173
+            },
+            "Finnish": {
+                lat: 63.2467777,
+                lng: 25.9209164
+            },
+            "Hungarian": {
+                lat: 47.1817585,
+                lng: 19.5060937
+            }
         };
 
-        const apiUrl = 'https://en.wiktionary.org/w/api.php?action=parse&page=Appendix:Mordvinic_word_lists_(edited)&prop=text&format=json&origin=*';
+        const apiUrl =
+            'https://en.wiktionary.org/w/api.php?action=parse&page=Appendix:Mordvinic_word_lists_(edited)&prop=text&format=json&origin=*';
 
         let wordsData = [];
 
@@ -139,7 +162,7 @@
             });
 
             if (wordsData.length > 0) {
-                wordSelector.value = wordsData[0].english; 
+                wordSelector.value = wordsData[0].english;
                 updateLabels(wordsData[0].english);
             }
         }
@@ -156,35 +179,53 @@
             if (selectedRow) {
                 const bounds = L.latLngBounds();
 
-                const labels = [
-                    { name: "Erzya", value: selectedRow.erzya },
-                    { name: "Moksha", value: selectedRow.moksha },
-                    { name: "Russian", value: selectedRow.russian },
-                    { name: "Finnish", value: selectedRow.finnish },
-                    { name: "Hungarian", value: selectedRow.hungarian }
+                const labels = [{
+                        name: "Erzya",
+                        value: selectedRow.erzya
+                    },
+                    {
+                        name: "Moksha",
+                        value: selectedRow.moksha
+                    },
+                    {
+                        name: "Russian",
+                        value: selectedRow.russian
+                    },
+                    {
+                        name: "Finnish",
+                        value: selectedRow.finnish
+                    },
+                    {
+                        name: "Hungarian",
+                        value: selectedRow.hungarian
+                    }
                 ];
 
                 labels.forEach(function (label) {
-    var coord = coordinates[label.name];
-    if (coord && label.value) {
-        var customLabel = L.divIcon({
-            className: 'custom-label',
-            html: label.value,
-            iconSize: [100, 30]
-        });
+                    var coord = coordinates[label.name];
+                    if (coord && label.value) {
+                        var customLabel = L.divIcon({
+                            className: 'custom-label',
+                            html: label.value,
+                            iconSize: [100, 30]
+                        });
 
-        var marker = L.marker([coord.lat, coord.lng], { icon: customLabel }).addTo(map);
+                        var marker = L.marker([coord.lat, coord.lng], {
+                            icon: customLabel
+                        }).addTo(map);
 
-        marker.bindPopup(`<strong>${label.name}</strong>`);
+                        marker.bindPopup(`<strong>${label.name}</strong>`);
 
-        bounds.extend(marker.getLatLng());
-    }
-});
+                        bounds.extend(marker.getLatLng());
+                    }
+                });
 
                 if (!bounds.isValid()) {
                     console.warn("No valid bounds to fit on the map.");
                 } else {
-                    map.fitBounds(bounds, { padding: [50, 50] });
+                    map.fitBounds(bounds, {
+                        padding: [50, 50]
+                    });
                 }
             }
         }
@@ -196,14 +237,15 @@
 
         fetchData();
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             map.invalidateSize();
         });
 
-        document.getElementById('mapSelector').addEventListener('change', function() {
-    const selectedValue = this.value;
-    window.location.href = selectedValue;
-});
+        document.getElementById('mapSelector').addEventListener('change', function () {
+            const selectedValue = this.value;
+            window.location.href = selectedValue;
+        });
     </script>
 </body>
+
 </html>
